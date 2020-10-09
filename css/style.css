@@ -17,3 +17,14 @@
 	justify-content: space-around;
 	align-items: center;
 }
+
+.notif{
+	display: flex;
+	flex-direction: row;
+}
+
+.notif img{
+	width: 100px;
+	display: flex;
+	display: inline-block;
+}
