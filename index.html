@@ -87,6 +87,15 @@
 			</div>
 		</div>
 		
+		<div class="row">
+			<input type="text" id="iden">
+			<input type="file" id="photo">
+			<button class="btn btn-success" onclick="uploadImg()">UPLOAD</button>
+			<br><br>
+			<input type="text" id="uid">
+			<img src="" alt="" id="img">
+			<button onclick="retrieveIMG()">RETRIEVE img</button>
+		</div>
 
 
 		<div class="row">
@@ -208,4 +217,79 @@
 	</div>
 	
 </body>
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyATTxgudFf45YWAd0xBIc5P3wDBHcKODew",
+    authDomain: "demoimg-23b1f.firebaseapp.com",
+    databaseURL: "https://demoimg-23b1f.firebaseio.com",
+    projectId: "demoimg-23b1f",
+    storageBucket: "demoimg-23b1f.appspot.com",
+    messagingSenderId: "671617105734",
+    appId: "1:671617105734:web:1752ed9be2b5e7e80b2f47",
+    measurementId: "G-GW5LLJ088S"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  function uploadImg(){
+	  const ref = firebase.storage().ref()
+
+	  const file = document.querySelector("#photo").files[0]
+
+	  const name = document.querySelector("#iden").value 
+
+	  const metadata = {
+		  contentType:file.type
+	  }
+
+	  const task = ref.child(name).put(file, metadata)
+
+	  task
+	  .then(snapshot => snapshot.ref.getDownloadURL())
+	  .then(url => {
+			  console.log(url)
+
+				alert("Image Uploaded")
+
+			saveURL(name, url)
+		  })
+
+	
+		
+		// firebase.database().ref(name).set({
+		// 	Name: name,
+		// 	Link: url
+		// })
+
+  }
+
+function saveURL(userId, imageUrl) {
+firebase.database().ref('users/' + userId).set({
+profile_picture : imageUrl
+});
+
+}
+
+function retrieveIMG(){
+	  uid = document.getElementById('uid').value;
+	  firebase.database().ref('users/' + uid).on('value', function(snapshot){
+		  document.getElementById('img').src = snapshot.val().profile_picture;
+	  });
+  }
+</script>
+
 </html>
